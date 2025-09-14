@@ -18,6 +18,7 @@ theorem doubleneg_elim :
   ¬ ¬ P → P  := by
   sorry
 
+
 theorem doubleneg_law :
   ¬ ¬ P ↔ P  := by
   sorry
@@ -29,11 +30,19 @@ theorem doubleneg_law :
 
 theorem disj_comm :
   (P ∨ Q) → (Q ∨ P)  := by
-  sorry
+  intro h
+  rcases h with hp|hq
+  right
+  exact hp
+  left
+  exact hq
 
 theorem conj_comm :
   (P ∧ Q) → (Q ∧ P)  := by
-  sorry
+  intro h
+  constructor
+  exact h.2
+  exact h.1
 
 
 ------------------------------------------------
@@ -175,7 +184,8 @@ theorem uncurry_prop :
 
 theorem impl_refl :
   P → P  := by
-  sorry
+  intro h
+  exact h
 
 
 ------------------------------------------------
@@ -184,19 +194,25 @@ theorem impl_refl :
 
 theorem weaken_disj_right :
   P → (P ∨ Q)  := by
-  sorry
+  intro h
+  left
+  exact h
 
 theorem weaken_disj_left :
   Q → (P ∨ Q)  := by
-  sorry
+  intro h
+  right
+  exact h
 
 theorem weaken_conj_right :
   (P ∧ Q) → P  := by
-  sorry
+  intro h
+  exact h.left
 
 theorem weaken_conj_left :
   (P ∧ Q) → Q  := by
-  sorry
+  intro h
+  exact h.right
 
 
 ------------------------------------------------
@@ -218,7 +234,8 @@ theorem conj_idem :
 
 theorem false_bottom :
   False → P := by
-  sorry
+  intro h
+  contradiction
 
 theorem true_top :
   P → True  := by
