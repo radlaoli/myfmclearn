@@ -51,11 +51,19 @@ theorem conj_comm :
 
 theorem impl_as_disj_converse :
   (¬ P ∨ Q) → (P → Q)  := by
-  sorry
+  intro h
+  intro hp
+  rcases h with h1|h2
+  contradiction
+  exact h2
 
 theorem disj_as_impl :
   (P ∨ Q) → (¬ P → Q)  := by
-  sorry
+  intro h
+  intro hn
+  rcases h with hp|hq
+  contradiction
+  exact hq
 
 
 ------------------------------------------------
@@ -158,11 +166,25 @@ theorem distr_conj_disj_converse :
 
 theorem distr_disj_conj :
   P ∨ (Q ∧ R) → (P ∨ Q) ∧ (P ∨ R)  := by
-  sorry
+  intro h
+  rcases h with hp|hd
+  constructor
+  left
+  exact hp
+  left
+  exact hp
+  constructor
+  right
+  exact hd.left
+  right
+  exact hd.right
+
 
 theorem distr_disj_conj_converse :
   (P ∨ Q) ∧ (P ∨ R) → P ∨ (Q ∧ R)  := by
   sorry
+
+
 
 
 ------------------------------------------------
