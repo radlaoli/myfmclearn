@@ -16,7 +16,12 @@ theorem doubleneg_intro :
 
 theorem doubleneg_elim :
   ¬ ¬ P → P  := by
-  sorry
+  intro hnnp
+  by_cases hnp: P
+  · exact hnp
+  · exfalso
+    apply hnnp
+    exact hnp
 
 
 theorem doubleneg_law :
@@ -72,11 +77,20 @@ theorem disj_as_impl :
 
 theorem impl_as_contrapositive :
   (P → Q) → (¬ Q → ¬ P)  := by
-  sorry
+  intro hpq hnq hp
+  apply hnq
+  apply hpq
+  exact hp
 
 theorem impl_as_contrapositive_converse :
   (¬ Q → ¬ P) → (P → Q)  := by
-  sorry
+  intro hnpq hp
+  by_cases hq : Q
+  exact hq
+  exfalso
+  apply hnpq hq
+  exact hp
+
 
 theorem contrapositive_law :
   (P → Q) ↔ (¬ Q → ¬ P)  := by
@@ -89,7 +103,14 @@ theorem contrapositive_law :
 
 theorem lem_irrefutable :
   ¬ ¬ (P ∨ ¬ P)  := by
-  sorry
+  intro h
+  apply h
+  right
+  intro hp
+  apply h
+  left
+  exact hp
+
 
 
 ------------------------------------------------
@@ -107,7 +128,14 @@ theorem peirce_law_weak :
 
 theorem impl_linear :
   (P → Q) ∨ (Q → P)  := by
-  sorry
+  by_cases h: P
+  right
+  intro hq
+  exact h
+  left
+  intro hp
+  exfalso
+  exact h hp
 
 
 ------------------------------------------------
@@ -261,7 +289,8 @@ theorem false_bottom :
 
 theorem true_top :
   P → True  := by
-  sorry
+  intro h
+  trivial --Ohh
 
 
 end propositional
