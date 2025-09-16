@@ -26,7 +26,19 @@ theorem doubleneg_elim :
 
 theorem doubleneg_law :
   ¬ ¬ P ↔ P  := by
-  sorry
+  constructor
+  · intro nnp
+    by_cases hnp: P
+    · exact hnp
+    · exfalso
+      apply nnp
+      exact hnp
+  · intro hp
+    intro np
+    apply np
+    exact hp
+
+
 
 
 ------------------------------------------------
@@ -94,7 +106,18 @@ theorem impl_as_contrapositive_converse :
 
 theorem contrapositive_law :
   (P → Q) ↔ (¬ Q → ¬ P)  := by
-  sorry
+  constructor
+  · intro hpq hnq hp
+    have hq: Q := hpq hp
+    have hf: False := hnq hq
+    contradiction
+  · intro hnpnq hp
+    by_cases hq: Q
+    · exact hq
+    · have hnp : ¬P := hnpnq hq
+      have hc: False := hnp hp
+      contradiction
+
 
 
 ------------------------------------------------
@@ -119,7 +142,14 @@ theorem lem_irrefutable :
 
 theorem peirce_law_weak :
   ((P → Q) → P) → ¬ ¬ P  := by
-  sorry
+  intro himp hnp
+  have hpq: P → Q := by
+    intro hp
+    have hc: False:= hnp hp
+    contradiction
+  have hp: P := himp hpq
+  have hc: False := hnp hp
+  contradiction
 
 
 ------------------------------------------------
@@ -144,11 +174,25 @@ theorem impl_linear :
 
 theorem disj_as_negconj :
   P ∨ Q → ¬ (¬ P ∧ ¬ Q)  := by
-  sorry
+  intro puq npnq
+  rcases puq with hp|hq
+  · have hc: False:= npnq.1 hp
+    contradiction
+  · have hc: False := npnq.2 hq
+    contradiction
 
 theorem conj_as_negdisj :
   P ∧ Q → ¬ (¬ P ∨ ¬ Q)  := by
-  sorry
+  intro peq npnq
+  rcases npnq with np|nq
+  · have f1: False := np peq.1
+    contradiction
+  · have f2: False := nq peq.2
+    contradiction
+
+
+
+
 
 
 ------------------------------------------------
@@ -161,7 +205,14 @@ theorem demorgan_disj :
 
 theorem demorgan_disj_converse :
   (¬ P ∧ ¬ Q) → ¬ (P ∨ Q)  := by
-  sorry
+  intro npnq pq
+  rcases pq with p|q
+  · have np: ¬P := npnq.1
+    have f: False := np p
+    contradiction
+  . have nq : ¬ Q := npnq.2
+    have f: False := nq q
+    contradiction
 
 theorem demorgan_conj :
   ¬ (P ∧ Q) → (¬ Q ∨ ¬ P)  := by
@@ -169,7 +220,15 @@ theorem demorgan_conj :
 
 theorem demorgan_conj_converse :
   (¬ Q ∨ ¬ P) → ¬ (P ∧ Q)  := by
-  sorry
+  intro hd peq
+  rcases hd with nq|np
+  · have q: Q := peq.right
+    have f : False := nq q
+    contradiction
+  . have p : P := peq.left
+    have f: False:= np p
+    contradiction
+
 
 theorem demorgan_conj_law :
   ¬ (P ∧ Q) ↔ (¬ Q ∨ ¬ P)  := by
@@ -186,11 +245,37 @@ theorem demorgan_disj_law :
 
 theorem distr_conj_disj :
   P ∧ (Q ∨ R) → (P ∧ Q) ∨ (P ∧ R)  := by
-  sorry
+  intro pqr
+  have p: P := pqr.left
+  have qur: (Q ∨ R ) := pqr.right
+  rcases qur with q|r
+  · left
+    constructor
+    · exact p
+    · exact q
+  · right
+    constructor
+    · exact p
+    · exact r
 
 theorem distr_conj_disj_converse :
   (P ∧ Q) ∨ (P ∧ R) → P ∧ (Q ∨ R)  := by
-  sorry
+  intro h
+  rcases h with pq|pr
+  · constructor
+    · have p: P := pq.1
+      exact p
+    · left
+      have q: Q := pq.2
+      exact q
+  · constructor
+    · have p: P := pr.1
+      exact p
+    · right
+      · have r: R := pr.2
+        exact r
+
+
 
 theorem distr_disj_conj :
   P ∨ (Q ∧ R) → (P ∨ Q) ∧ (P ∨ R)  := by
@@ -221,11 +306,23 @@ theorem distr_disj_conj_converse :
 
 theorem curry_prop :
   ((P ∧ Q) → R) → (P → (Q → R))  := by
-  sorry
+  intro h p q
+  have peq: (P ∧ Q) := by
+    constructor
+    · exact p
+    · exact q
+  have r: R := h peq
+  exact r
 
 theorem uncurry_prop :
   (P → (Q → R)) → ((P ∧ Q) → R)  := by
-  sorry
+  intro h peq
+  have p: P := peq.1
+  have qr: (Q → R):= h p
+  have q : Q := peq.2
+  have r: R := qr q
+  exact r
+
 
 
 ------------------------------------------------
@@ -271,11 +368,25 @@ theorem weaken_conj_left :
 
 theorem disj_idem :
   (P ∨ P) ↔ P  := by
-  sorry
+  constructor
+  · intro pup
+    rcases pup with hp1|hp2
+    · exact hp1
+    · exact hp2
+  · intro hp
+    · left
+      exact hp
 
 theorem conj_idem :
   (P ∧ P) ↔ P := by
-  sorry
+  constructor
+  · intro pep
+    exact pep.1
+  · intro hp
+    constructor
+    · exact hp
+    · exact hp
+
 
 
 ------------------------------------------------
