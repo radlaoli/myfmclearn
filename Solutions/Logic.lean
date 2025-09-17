@@ -488,8 +488,7 @@ end propositional
 
 section predicate
 
-variable (U : Type)
-variable (P Q : U → Type)
+variable (P Q : U → Prop)
 
 
 ------------------------------------------------
@@ -498,18 +497,34 @@ variable (P Q : U → Type)
 
 theorem demorgan_exists :
   ¬ (∃ x, P x) → (∀ x, ¬ P x)  := by
-  sorry
+  intro h
+  intro n
+  intro Pn
+  have ep: ∃ x, P x:= by
+    exists n
+  have f : False := h ep
+  exact f
+
 
 theorem demorgan_exists_converse :
   (∀ x, ¬ P x) → ¬ (∃ x, P x)  := by
+  intro h
+  intro he
   sorry
+
 
 theorem demorgan_forall :
   ¬ (∀ x, P x) → (∃ x, ¬ P x)  := by
+  intro h
+  have u: ∀ (x : U), P x:= by
+    intro n
   sorry
 
 theorem demorgan_forall_converse :
   (∃ x, ¬ P x) → ¬ (∀ x, P x)  := by
+  intro h
+  intro Pa
+  have
   sorry
 
 theorem demorgan_forall_law :
@@ -527,18 +542,32 @@ theorem demorgan_exists_law :
 
 theorem exists_as_neg_forall :
   (∃ x, P x) → ¬ (∀ x, ¬ P x)  := by
+  intro he
+  intro Pa
+  have ⟨n, hn⟩ := he
   sorry
+
+
 
 theorem forall_as_neg_exists :
   (∀ x, P x) → ¬ (∃ x, ¬ P x)  := by
+  intro ha
+  intro he
   sorry
 
 theorem forall_as_neg_exists_converse :
   ¬ (∃ x, ¬ P x) → (∀ x, P x)  := by
-  sorry
+  intro h
+  intro n
+  have h1: ∃ x, ¬P x:= by
+    exists n
+    intro Pn
+    sorry
 
 theorem exists_as_neg_forall_converse :
   ¬ (∀ x, ¬ P x) → (∃ x, P x)  := by
+  intro h
+  exists n
   sorry
 
 theorem forall_as_neg_exists_law :
@@ -556,11 +585,29 @@ theorem exists_as_neg_forall_law :
 
 theorem exists_conj_as_conj_exists :
   (∃ x, P x ∧ Q x) → (∃ x, P x) ∧ (∃ x, Q x)  := by
-  sorry
+  intro h
+  have ⟨ p,hp ⟩ := h
+  have Pp: P p:= hp.left
+  have Pq: Q p:= hp.right
+  constructor
+  · exists p
+  · exists p
+
+
+
+
 
 theorem exists_disj_as_disj_exists :
   (∃ x, P x ∨ Q x) → (∃ x, P x) ∨ (∃ x, Q x)  := by
-  sorry
+  intro h
+  have ⟨n , hn⟩ := h
+  rcases hn with Pn| Qn
+  · left
+    exists n
+  · right
+    exists n
+
+
 
 theorem exists_disj_as_disj_exists_converse :
   (∃ x, P x) ∨ (∃ x, Q x) → (∃ x, P x ∨ Q x)  := by
