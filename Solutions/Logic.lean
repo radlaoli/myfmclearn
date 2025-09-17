@@ -1,5 +1,7 @@
 section propositional
-
+/- Obs: Ao longo das demonstrações fui aprendendo formas diferentes de fazer <<as mesmas coisas>>,
+por isso ficou irregular.
+Porém pretendo padronizar-/
 variable (P Q R : Prop)
 
 
@@ -201,7 +203,21 @@ theorem conj_as_negdisj :
 
 theorem demorgan_disj :
   ¬ (P ∨ Q) → (¬ P ∧ ¬ Q)  := by
-  sorry
+  intro h
+  constructor
+  · intro p
+    have pq: P ∨ Q:= by
+      · left
+        exact p
+    have f: False := h pq
+    exact f
+  · intro q
+    have pq: P ∨ Q:= by
+      · right
+        exact q
+    have f : False := h pq
+    exact f
+
 
 theorem demorgan_disj_converse :
   (¬ P ∧ ¬ Q) → ¬ (P ∨ Q)  := by
@@ -216,7 +232,21 @@ theorem demorgan_disj_converse :
 
 theorem demorgan_conj :
   ¬ (P ∧ Q) → (¬ Q ∨ ¬ P)  := by
-  sorry
+  intro h
+  by_cases lemp: P
+  · left
+    · intro q
+      have pq : (P ∧ Q) := by
+        constructor
+        · exact lemp
+        · exact q
+      have f : False := h pq
+      contradiction
+  · right
+    exact lemp
+
+
+
 
 theorem demorgan_conj_converse :
   (¬ Q ∨ ¬ P) → ¬ (P ∧ Q)  := by
@@ -232,11 +262,46 @@ theorem demorgan_conj_converse :
 
 theorem demorgan_conj_law :
   ¬ (P ∧ Q) ↔ (¬ Q ∨ ¬ P)  := by
-  sorry
+  constructor
+  · intro h
+    by_cases hP : P
+    · left
+      intro hQ
+      have hPQ : P ∧ Q := ⟨hP, hQ⟩
+      exact h hPQ
+    · right
+      exact hP
+  · intro h hPQ
+    rcases h with (hNQ | hNP)
+    · exact hNQ hPQ.right
+    · exact hNP hPQ.left
+
 
 theorem demorgan_disj_law :
   ¬ (P ∨ Q) ↔ (¬ P ∧ ¬ Q)  := by
-  sorry
+  constructor
+  · intro h
+    constructor
+    · intro p
+      have pq: P ∨ Q:= by
+        · left
+          exact p
+      have f: False := h pq
+      exact f
+    · intro q
+      have pq: P ∨ Q:= by
+        · right
+          exact q
+      have f : False := h pq
+      exact f
+  · intro npnq pq
+    rcases pq with p|q
+    · have np: ¬P := npnq.1
+      have f: False := np p
+      contradiction
+    . have nq : ¬ Q := npnq.2
+      have f: False := nq q
+      contradiction
 
 
 ------------------------------------------------
@@ -295,7 +360,20 @@ theorem distr_disj_conj :
 
 theorem distr_disj_conj_converse :
   (P ∨ Q) ∧ (P ∨ R) → P ∨ (Q ∧ R)  := by
-  sorry
+  intro h
+  have pq : (P ∨ Q) := h.1
+  have pr : (P ∨ R) := h.2
+  rcases pq with p|q
+  · left
+    exact p
+  rcases pr with p|r
+  · left
+    exact p
+  · right
+    constructor
+    · exact q
+    · exact r
+
 
 
 
