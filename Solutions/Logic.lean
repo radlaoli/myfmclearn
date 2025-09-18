@@ -524,7 +524,6 @@ theorem demorgan_forall_converse :
   (∃ x, ¬ P x) → ¬ (∀ x, P x)  := by
   intro h
   intro Pa
-  have
   sorry
 
 theorem demorgan_forall_law :
@@ -553,22 +552,23 @@ theorem forall_as_neg_exists :
   (∀ x, P x) → ¬ (∃ x, ¬ P x)  := by
   intro ha
   intro he
+  have ⟨x, nPx ⟩:= he
   sorry
 
 theorem forall_as_neg_exists_converse :
   ¬ (∃ x, ¬ P x) → (∀ x, P x)  := by
-  intro h
-  intro n
-  have h1: ∃ x, ¬P x:= by
-    exists n
-    intro Pn
-    sorry
+  intro h x
+  by_cases h1 : P x
+  · exact h1
+  · have h2: ∃ x, ¬ P x := ⟨x, h1⟩
+    contradiction
 
 theorem exists_as_neg_forall_converse :
   ¬ (∀ x, ¬ P x) → (∃ x, P x)  := by
   intro h
-  exists n
-  sorry
+  by_cases hn:∃ x, P x
+  · exact hn
+  · sorry
 
 theorem forall_as_neg_exists_law :
   (∀ x, P x) ↔ ¬ (∃ x, ¬ P x)  := by
@@ -611,7 +611,16 @@ theorem exists_disj_as_disj_exists :
 
 theorem exists_disj_as_disj_exists_converse :
   (∃ x, P x) ∨ (∃ x, Q x) → (∃ x, P x ∨ Q x)  := by
-  sorry
+  intro h
+  rcases h with h1|h2
+  · have ⟨n,Pn ⟩:= h1
+    exists n
+    left
+    · exact Pn
+  · have ⟨n, Qn ⟩:= h2
+    exists n
+    right
+    · exact Qn
 
 theorem forall_conj_as_conj_forall :
   (∀ x, P x ∧ Q x) → (∀ x, P x) ∧ (∀ x, Q x)  := by
