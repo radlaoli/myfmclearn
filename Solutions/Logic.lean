@@ -510,7 +510,9 @@ theorem demorgan_exists_converse :
   (∀ x, ¬ P x) → ¬ (∃ x, P x)  := by
   intro h
   intro he
-  sorry
+  have ⟨ x, hx ⟩ := he
+  have nPx: ¬P x := h x
+  exact nPx hx
 
 
 theorem demorgan_forall :
@@ -518,13 +520,15 @@ theorem demorgan_forall :
   intro h
   have u: ∀ (x : U), P x:= by
     intro n
-  sorry
+    sorry
 
 theorem demorgan_forall_converse :
   (∃ x, ¬ P x) → ¬ (∀ x, P x)  := by
   intro h
   intro Pa
-  sorry
+  have ⟨x, nPx ⟩:= h
+  have Px: P x:= Pa x
+  exact nPx Px
 
 theorem demorgan_forall_law :
   ¬ (∀ x, P x) ↔ (∃ x, ¬ P x)  := by
@@ -544,7 +548,8 @@ theorem exists_as_neg_forall :
   intro he
   intro Pa
   have ⟨n, hn⟩ := he
-  sorry
+  have nPn: ¬P n:= Pa n
+  exact nPn hn
 
 
 
@@ -553,7 +558,8 @@ theorem forall_as_neg_exists :
   intro ha
   intro he
   have ⟨x, nPx ⟩:= he
-  sorry
+  have Px : P x:= ha x
+  exact nPx Px
 
 theorem forall_as_neg_exists_converse :
   ¬ (∃ x, ¬ P x) → (∀ x, P x)  := by
@@ -572,7 +578,9 @@ theorem exists_as_neg_forall_converse :
 
 theorem forall_as_neg_exists_law :
   (∀ x, P x) ↔ ¬ (∃ x, ¬ P x)  := by
+  constructor
   sorry
+
 
 theorem exists_as_neg_forall_law :
   (∃ x, P x) ↔ ¬ (∀ x, ¬ P x)  := by
