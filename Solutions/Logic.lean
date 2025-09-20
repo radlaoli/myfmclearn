@@ -518,9 +518,8 @@ theorem demorgan_exists_converse :
 theorem demorgan_forall :
   ¬ (∀ x, P x) → (∃ x, ¬ P x)  := by
   intro h
-  have u: ∀ (x : U), P x:= by
-    intro n
-    sorry
+  sorry
+
 
 theorem demorgan_forall_converse :
   (∃ x, ¬ P x) → ¬ (∀ x, P x)  := by
@@ -536,7 +535,19 @@ theorem demorgan_forall_law :
 
 theorem demorgan_exists_law :
   ¬ (∃ x, P x) ↔ (∀ x, ¬ P x)  := by
-  sorry
+  constructor
+  · intro h
+    intro n
+    intro Pn
+    have ep: ∃ x, P x:= by
+      exists n
+    have f : False := h ep
+    exact f
+  · intro h
+    intro he
+    have ⟨ x, hx ⟩ := he
+    have nPx: ¬P x := h x
+    exact nPx hx
 
 
 ------------------------------------------------
@@ -579,12 +590,26 @@ theorem exists_as_neg_forall_converse :
 theorem forall_as_neg_exists_law :
   (∀ x, P x) ↔ ¬ (∃ x, ¬ P x)  := by
   constructor
-  sorry
-
+  · intro ha
+    intro he
+    have ⟨x, nPx ⟩:= he
+    have Px : P x:= ha x
+    exact nPx Px
+  · intro h x
+    by_cases h1 : P x
+    · exact h1
+    · have h2: ∃ x, ¬ P x := ⟨x, h1⟩
+      contradiction
 
 theorem exists_as_neg_forall_law :
   (∃ x, P x) ↔ ¬ (∀ x, ¬ P x)  := by
-  sorry
+  constructor
+  · intro h1 h2
+    have ⟨n,hn⟩:= h1
+    have nPn: ¬P n:= h2 n
+    apply nPn hn
+  · intro h1
+    sorry
 
 
 ------------------------------------------------
@@ -632,15 +657,38 @@ theorem exists_disj_as_disj_exists_converse :
 
 theorem forall_conj_as_conj_forall :
   (∀ x, P x ∧ Q x) → (∀ x, P x) ∧ (∀ x, Q x)  := by
-  sorry
+  intro h
+  constructor
+  · intro n
+    have PQn : P n ∧ Q n := h n
+    have Pn : P n := PQn.left
+    exact Pn
+  · intro n
+    have PQn : P n ∧ Q n := h n
+    have Qn : Q n := PQn.right
+    exact Qn
 
 theorem forall_conj_as_conj_forall_converse :
   (∀ x, P x) ∧ (∀ x, Q x) → (∀ x, P x ∧ Q x)  := by
-  sorry
+  intro h n
+  constructor
+  · have Pn: P n:= h.left n
+    exact Pn
+  · have Qn : Q n:= h.right n
+    exact Qn
+
 
 theorem forall_disj_as_disj_forall_converse :
   (∀ x, P x) ∨ (∀ x, Q x) → (∀ x, P x ∨ Q x)  := by
-  sorry
+  intro h n
+  rcases h with hp|hq
+  · left
+    · have Pn: P n:= hp n
+      exact Pn
+  · right
+    · have Qn: Q n:= hq n
+      exact Qn
+
 
 
 end predicate
