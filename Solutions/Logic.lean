@@ -471,7 +471,7 @@ theorem conj_idem :
 -- Bottom, Top
 ------------------------------------------------
 
-theorem false_bot tom :
+theorem false_bottom :
   False → P := by
   intro h
   contradiction
