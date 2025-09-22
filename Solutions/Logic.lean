@@ -471,7 +471,7 @@ theorem conj_idem :
 -- Bottom, Top
 ------------------------------------------------
 
-theorem false_bottom :
+theorem false_bot tom :
   False → P := by
   intro h
   contradiction
@@ -518,7 +518,15 @@ theorem demorgan_exists_converse :
 theorem demorgan_forall :
   ¬ (∀ x, P x) → (∃ x, ¬ P x)  := by
   intro h
-  sorry
+  by_cases hn : ∃ x, ¬P x
+  · exact hn
+  · have : ∀ x, P x := by
+      intro x
+      by_cases hx : P x
+      · exact hx
+      · have : ∃ x, ¬ P x := ⟨x, hx⟩
+        contradiction
+    contradiction
 
 
 theorem demorgan_forall_converse :
@@ -531,7 +539,22 @@ theorem demorgan_forall_converse :
 
 theorem demorgan_forall_law :
   ¬ (∀ x, P x) ↔ (∃ x, ¬ P x)  := by
-  sorry
+  constructor
+  · intro h
+    by_cases hn : ∃ x, ¬P x
+    · exact hn
+    · have : ∀ x, P x := by
+        intro x
+        by_cases hx : P x
+        · exact hx
+        · have : ∃ x, ¬ P x := ⟨x, hx⟩
+          contradiction
+      contradiction
+  · intro h
+    intro Pa
+    have ⟨x, nPx ⟩:= h
+    have Px: P x:= Pa x
+    exact nPx Px
 
 theorem demorgan_exists_law :
   ¬ (∃ x, P x) ↔ (∀ x, ¬ P x)  := by
@@ -585,7 +608,13 @@ theorem exists_as_neg_forall_converse :
   intro h
   by_cases hn:∃ x, P x
   · exact hn
-  · sorry
+  · have: ∀ x, ¬ P x := by
+      intro x
+      by_cases hx : P x
+      · have : ∃ x, P x := ⟨x, hx⟩
+        contradiction
+      · exact hx
+    contradiction
 
 theorem forall_as_neg_exists_law :
   (∀ x, P x) ↔ ¬ (∃ x, ¬ P x)  := by
@@ -608,8 +637,16 @@ theorem exists_as_neg_forall_law :
     have ⟨n,hn⟩:= h1
     have nPn: ¬P n:= h2 n
     apply nPn hn
-  · intro h1
-    sorry
+  · intro h
+    by_cases hn:∃ x, P x
+    · exact hn
+    · have: ∀ x, ¬ P x := by
+        intro x
+        by_cases hx : P x
+        · have : ∃ x, P x := ⟨x, hx⟩
+          contradiction
+        · exact hx
+      contradiction
 
 
 ------------------------------------------------
